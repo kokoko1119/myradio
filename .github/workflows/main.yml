@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Fetch latest news
+        run: python scripts/generate_news.py
 
       - name: Install edge-tts
         run: pip install edge-tts
