@@ -2,7 +2,7 @@ name: Morning Radio
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '0 22 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,5 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check schedule
-        run: echo "Morning radio scheduled for 08:00 JST"
+        run: echo "Morning radio scheduled for 07:00 JST"
         
