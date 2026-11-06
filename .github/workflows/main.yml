@@ -5,10 +5,37 @@ on:
     - cron: '0 22 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   morning-radio:
     runs-on: ubuntu-latest
     steps:
-      - name: Check schedule
-        run: echo "Morning radio scheduled for 07:00 JST"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install edge-tts
+        run: pip install edge-tts
+
+      - name: Generate audio
+        run: |
+          mkdir -p audio
+          DATE=$(TZ=Asia/Tokyo date +%F)
+          edge-tts --voice ja-JP-NanamiNeural --text "おはようございます。こちらはマイラジオです。今日も一日よろしくお願いします。" --write-media "audio/${DATE}-ja.mp3"
+
+      - name: Save audio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio/
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate morning radio audio"
+            git push
+          fi
         
